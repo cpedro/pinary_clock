@@ -48,7 +48,7 @@ from datetime import datetime
 hour_pins = {
     '16': 0,
     '8': 1,
-    '4': 2, 
+    '4': 2,
     '2': 3,
     '1': 4
 }
@@ -111,8 +111,15 @@ def loop(args):
     if args.debug:
         print('-----------------------------')
         print('Time = {:02d}:{:02d}'.format(now.hour, now.minute))
-    set_hour_pins(args, now.hour)
-    set_minute_pins(args, now.minute)
+        print('-----------------------------')
+        print('Hour Pins:')
+        print('-----------------------------')
+    set_pins(args, hour_pins, now.hour)
+    if args.debug:
+        print('-----------------------------')
+        print('Minute Pins:')
+        print('-----------------------------')
+    set_pins(args, min_pins, now.minute)
     time.sleep(0.5)
 
 
@@ -138,44 +145,39 @@ def test_all_pins():
         wiringpi.digitalWrite(pin, wiringpi.LOW)
 
 
-def bits(int_type, **kwargs):
+def set_pins(args, pins, hour):
+    """Method for setting all hour pins that are needed.
+    """
+    # Clear all pins by default
+    clear_bits = pins.copy()
+    set_bits = {}
+
+    # If a bit needs to be set add it to set_bits and remove it from clear_bits
+    for bit in bits(hour):
+        clear_bits.pop(str(bit))
+        set_bits[str(bit)] = pins[str(bit)]
+
+    # Clear bits
+    for bit in clear_bits:
+        if args.debug:
+            print('\t{}\tClear'.format(bit))
+        wiringpi.digitalWrite(pins[str(bit)], wiringpi.LOW)
+
+    # Set bits
+    for bit in set_bits:
+        if args.debug:
+            print('\t{}\tSet'.format(bit))
+        wiringpi.digitalWrite(pins[str(bit)], wiringpi.HIGH)
+
+
+def bits(int_type):
     """Method to get list of bits that are set or cleared in an integer.
     """
     bit = 1
     while int_type >= bit:
-        if 'mode' in kwargs and kwargs['mode'] == 'cleared_bits':
-            if not int_type & bit:
-                yield bit
-        else:
-            if int_type & bit:
-                yield bit
+        if int_type & bit:
+            yield bit
         bit <<= 1
-
-
-def set_hour_pins(args, hour):
-    """Method for setting all hour pins that are needed.
-    """
-    if args.debug:
-        print('Hour bits to be set:')
-    for bit in bits(hour, mode='set_bits'):
-        if args.debug:
-            print('  {}'.format(bit))
-        wiringpi.digitalWrite(hour_pins[str(bit)], wiringpi.HIGH)
-    for bit in bits(hour, mode='cleared_bits'):
-        wiringpi.digitalWrite(hour_pins[str(bit)], wiringpi.LOW)
-
-
-def set_minute_pins(args, minutes):
-    """Method for setting all minute pins that are needed.
-    """
-    if args.debug:
-        print('Minute bits to be set:')
-    for bit in bits(minutes, mode='set_bits'):
-        if args.debug:
-            print('  {}'.format(bit))
-        wiringpi.digitalWrite(min_pins[str(bit)], wiringpi.HIGH)
-    for bit in bits(minutes, mode='cleared_bits'):
-        wiringpi.digitalWrite(min_pins[str(bit)], wiringpi.LOW)
 
 
 if __name__ == '__main__':
