@@ -61,6 +61,9 @@ min_pins = {
     '1': 10
 }
 
+# Value used for all sleep commands.  Adjust as needed.
+t_delay = 0.5
+
 
 def parse_args(args):
     """Parse command line arguments.
@@ -120,7 +123,7 @@ def loop(args):
         print('Minute Pins:')
         print('-----------------------------')
     set_pins(args, min_pins, now.minute)
-    time.sleep(0.5)
+    time.sleep(t_delay)
 
 
 def clear_all_pins():
@@ -137,11 +140,11 @@ def test_all_pins():
     """
     for pin in hour_pins.values():
         wiringpi.digitalWrite(pin, wiringpi.HIGH)
-        time.sleep(0.5)
+        time.sleep(t_delay)
         wiringpi.digitalWrite(pin, wiringpi.LOW)
     for pin in min_pins.values():
         wiringpi.digitalWrite(pin, wiringpi.HIGH)
-        time.sleep(0.5)
+        time.sleep(t_delay)
         wiringpi.digitalWrite(pin, wiringpi.LOW)
 
 
