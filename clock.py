@@ -98,6 +98,10 @@ def setup():
     """Setup method, preps GPIO pins.
     """
     wiringpi.wiringPiSetup()
+    for pin in hour_pins.values():
+        wiringpi.pinMode(pin, wiringpi.OUTPUT)
+    for pin in min_pins.values():
+        wiringpi.pinMode(pin, wiringpi.OUTPUT)
     clear_all_pins()
 
 
