@@ -3,21 +3,22 @@
 """
 File: clock.py
 Description: Displays a binary clock of the current time via lighting up LEDs.
-    Meant to be run from a Raspberry Pi.  It uses the below GPIO pins:
+    Meant to be run from a Raspberry Pi.
 
-    Hour Pins:
-        '16': WiringPi pin 0 (GPIO 17, Pi pin 11)
-        '8': WiringPi pin 1 (GPIO 18, Pi pin 12)
-        '4': WiringPi pin 2 (GPIO 27, Pi pin 13)
-        '2': WiringPi pin 3 (GPIO 22, Pi pin 15)
-        '1': WiringPi pin 4 (GPIO 23, Pi pin 16)
-    Minute Pins:
-        '32': WiringPi pin 5 (GPIO 24, Pi pin 18)
-        '16': WiringPi pin 6 (GPIO 24, Pi pin 18)
-        '8': WiringPi pin 7 (GPIO 25, Pi pin 22)
-        '4': WiringPi pin 8 (GPIO 2, Pi pin 3)
-        '2': WiringPi pin 9 (GPIO 3, Pi pin 5)
-        '1': WiringPi pin 10 (GPIO 8, Pi pin 24)
+    Pinouts:
+    Hour:
+        '16': WiringPi pin 0  - GPIO 17 - Pi pin 11
+        '8':  WiringPi pin 1  - GPIO 18 - Pi pin 12
+        '4':  WiringPi pin 2  - GPIO 27 - Pi pin 13
+        '2':  WiringPi pin 3  - GPIO 22 - Pi pin 15
+        '1':  WiringPi pin 4  - GPIO 23 - Pi pin 16
+    Minute:
+        '32': WiringPi pin 5  - GPIO 24 - Pi pin 18
+        '16': WiringPi pin 6  - GPIO 24 - Pi pin 18
+        '8':  WiringPi pin 7  - GPIO 25 - Pi pin 22
+        '4':  WiringPi pin 8  - GPIO 2  - Pi pin 3
+        '2':  WiringPi pin 9  - GPIO 3  - Pi pin 5
+        '1':  WiringPi pin 10 - GPIO 8  - Pi pin 24
 
 usage: clock.py [-h] [-t] [-d]
 
@@ -62,7 +63,9 @@ min_pins = {
 }
 
 # Value used for all sleep commands.  Adjust as needed.
-t_delay = 0.5
+t_delay = 0.25
+
+p_args = []
 
 
 def parse_args(args):
@@ -81,11 +84,12 @@ def parse_args(args):
 def main(args):
     """Main method.
     """
-    args = parse_args(args)
+    global p_args
+    p_args = parse_args(args)
     setup()
     try:
         while True:
-            loop(args)
+            loop()
     except KeyboardInterrupt:
         destroy()
 
@@ -103,26 +107,28 @@ def destroy():
     clear_all_pins()
 
 
-def loop(args):
+def loop():
     """Main execution loop.
     """
-    if args.test:
+    global p_args
+    if p_args.test:
         test_all_pins()
+        test_time()
         return
 
     now = datetime.now().time()
-    if args.debug:
+    if p_args.debug:
         print('-----------------------------')
         print('Time = {:02d}:{:02d}'.format(now.hour, now.minute))
         print('-----------------------------')
         print('Hour Pins:')
         print('-----------------------------')
-    set_pins(args, hour_pins, now.hour)
-    if args.debug:
+    set_pins(hour_pins, now.hour)
+    if p_args.debug:
         print('-----------------------------')
         print('Minute Pins:')
         print('-----------------------------')
-    set_pins(args, min_pins, now.minute)
+    set_pins(min_pins, now.minute)
     time.sleep(t_delay)
 
 
@@ -148,9 +154,18 @@ def test_all_pins():
         wiringpi.digitalWrite(pin, wiringpi.LOW)
 
 
-def set_pins(args, pins, hour):
+def test_time():
+    for hour in range(24):
+        for minute in range(60):
+            set_pins(hour_pins, hour)
+            set_pins(min_pins, minute)
+            time.sleep(0.2)
+
+
+def set_pins(pins, hour):
     """Method for setting all hour pins that are needed.
     """
+    global p_args
     # Clear all pins by default
     clear_bits = pins.copy()
     set_bits = {}
@@ -162,13 +177,13 @@ def set_pins(args, pins, hour):
 
     # Clear bits
     for bit in clear_bits:
-        if args.debug:
+        if p_args.debug:
             print('\t{}\tClear'.format(bit))
         wiringpi.digitalWrite(pins[str(bit)], wiringpi.LOW)
 
     # Set bits
     for bit in set_bits:
-        if args.debug:
+        if p_args.debug:
             print('\t{}\tSet'.format(bit))
         wiringpi.digitalWrite(pins[str(bit)], wiringpi.HIGH)
 
