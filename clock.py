@@ -14,8 +14,8 @@ Description: Displays a binary clock of the current time via lighting up LEDs.
         '1':  WiringPi pin 4  - GPIO 23 - Pi pin 16
     Minute:
         '32': WiringPi pin 5  - GPIO 24 - Pi pin 18
-        '16': WiringPi pin 6  - GPIO 24 - Pi pin 18
-        '8':  WiringPi pin 7  - GPIO 25 - Pi pin 22
+        '16': WiringPi pin 6  - GPIO 25 - Pi pin 22
+        '8':  WiringPi pin 7  - GPIO 4  - Pi pin 7
         '4':  WiringPi pin 8  - GPIO 2  - Pi pin 3
         '2':  WiringPi pin 9  - GPIO 3  - Pi pin 5
         '1':  WiringPi pin 10 - GPIO 8  - Pi pin 24
