@@ -21,7 +21,7 @@ Minute:
 ```
 
 ### Usage
-```shell
+```
 usage: clock.py [-h] [-t] [-d]
 
 Pinary Clock
