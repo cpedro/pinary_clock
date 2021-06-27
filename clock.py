@@ -43,6 +43,7 @@ import time
 import wiringpi
 
 from datetime import datetime
+from signal import *
 
 
 # Change to define output pins.
@@ -87,11 +88,8 @@ def main(args):
     global p_args
     p_args = parse_args(args)
     setup()
-    try:
-        while True:
-            loop()
-    except KeyboardInterrupt:
-        destroy()
+    while True:
+        loop()
 
 
 def setup():
@@ -105,10 +103,11 @@ def setup():
     clear_all_pins()
 
 
-def destroy():
+def cleanup(signal_received, frame):
     """Cleanup method, clears all pins.
     """
     clear_all_pins()
+    sys.exit(0)
 
 
 def loop():
@@ -203,5 +202,7 @@ def bits(int_type):
 
 
 if __name__ == '__main__':
+    for sig in (SIGABRT, SIGINT, SIGTERM):
+        signal(sig, cleanup)
     sys.exit(main(sys.argv[1:]))
 
