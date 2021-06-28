@@ -28,8 +28,9 @@ Pinary Clock
 
 optional arguments:
   -h, --help   show this help message and exit
-  -t, --test   Test pins mode
-  -d, --debug  Debug output, flashes all used pins in sequence from hour to
-               minute
+  -t, --test   Test output pins, flashes all used pins in sequence from hour
+               to minute, then starts simulating time changes from 00:00 to
+               23:59.
+  -d, --debug  Show debug output.
 ```
 

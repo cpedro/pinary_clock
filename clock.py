@@ -74,11 +74,11 @@ def parse_args(args):
     """
     parser = argparse.ArgumentParser(description='Pinary Clock')
     parser.add_argument(
-        '-t', '--test', action='store_true', help='Test pins mode')
+        '-t', '--test', action='store_true',
+        help='Test output pins, flashes all used pins in sequence from hour '
+        'to minute, then starts simulating time changes from 00:00 to 23:59.')
     parser.add_argument(
-        '-d', '--debug', action='store_true',
-        help='Debug output, flashes all used pins in sequence from hour to '
-        'minute')
+        '-d', '--debug', action='store_true', help='Show debug output.')
     return parser.parse_args(args)
 
 
