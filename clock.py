@@ -165,8 +165,8 @@ def test_time():
             time.sleep(0.2)
 
 
-def set_pins(pins, hour):
-    """Method for setting all hour pins that are needed.
+def set_pins(pins, value):
+    """Method for setting all pins that are needed.
     """
     global p_args
     # Clear all pins by default
@@ -174,7 +174,7 @@ def set_pins(pins, hour):
     set_bits = {}
 
     # If a bit needs to be set add it to set_bits and remove it from clear_bits
-    for bit in bits(hour):
+    for bit in bits(value):
         clear_bits.pop(str(bit))
         set_bits[str(bit)] = pins[str(bit)]
 
