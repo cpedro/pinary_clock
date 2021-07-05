@@ -7,7 +7,7 @@
 # usage: clock.sh {start|stop|status|restart}
 ###############################################################################
 
-# Change to full path of where clokc.py is located.
+# Change to full path of where clock.py is located.
 bin="./clock.py"
 
 start() {
