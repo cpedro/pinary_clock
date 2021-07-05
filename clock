@@ -1,0 +1,59 @@
+#!/bin/bash
+###############################################################################
+# Startup / Shutdown script for clock.py, to be used on Linux systems.
+# Runs via `nohub`, so you can safely terminate the terminal session after
+# running and the clock will still run in the backgound.
+#
+# usage: clock.sh {start|stop|status|restart}
+###############################################################################
+
+# Change to full path of where clokc.py is located.
+bin="./clock.py"
+
+start(){
+  if pid=$(pgrep -f clock.py)
+  then
+    echo "Clock is already running with PID ${pid}."
+  else
+    nohup ${bin} >/dev/null 2>&1 &
+  fi
+}
+
+stop() {
+  if pid=$(pgrep -f clock.py)
+  then
+    pkill -f clock.py
+  else
+    echo "Clock is not running."
+  fi
+}
+
+status() {
+  if pid=$(pgrep -f clock.py)
+  then
+    echo "Clock is running with PID ${pid}."
+  else
+    echo "Clock is not running."
+  fi
+}
+
+case $1 in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status
+    ;;
+  restart)
+    stop
+    sleep 1
+    start
+    ;;
+  *)
+    echo "usage: ${0##*/} {start|stop|status|restart}"
+    ;;
+esac
+
