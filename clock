@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
 # Startup / Shutdown script for clock.py, to be used on Linux systems.
-# Runs via `nohub`, so you can safely terminate the terminal session after
+# Runs via `nohup`, so you can safely terminate the terminal session after
 # running and the clock will still run in the backgound.
 #
 # usage: clock.sh {start|stop|status|restart}
