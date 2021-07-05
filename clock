@@ -10,7 +10,7 @@
 # Change to full path of where clokc.py is located.
 bin="./clock.py"
 
-start(){
+start() {
   if pid=$(pgrep -f clock.py)
   then
     echo "Clock is already running with PID ${pid}."
